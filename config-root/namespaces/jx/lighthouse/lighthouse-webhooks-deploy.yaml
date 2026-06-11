@@ -24,7 +24,7 @@ spec:
       labels:
         app: lighthouse-webhooks
       annotations:
-        jenkins-x.io/hash: '1faa69604ba2057e3ab5133271b42d2df6d8c68cb9a7d6c62cb349c697ed867b'
+        jenkins-x.io/hash: 'f41e7fd257f7ba3b7a78787403a53538ac4c9d6ef7985abb2c0e2c7f4d654984'
         prometheus.io/port: "2112"
         prometheus.io/scrape: "true"
     spec:

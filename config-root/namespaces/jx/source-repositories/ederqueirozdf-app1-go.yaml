@@ -1,0 +1,22 @@
+apiVersion: jenkins.io/v1
+kind: SourceRepository
+metadata:
+  creationTimestamp: null
+  labels:
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+    owner: ederqueirozdf
+    provider: github
+    repository: app1-go
+  name: ederqueirozdf-app1-go
+  namespace: jx
+spec:
+  httpCloneURL: https://github.com/ederqueirozdf/app1-go.git
+  org: ederqueirozdf
+  provider: https://github.com
+  providerKind: github
+  providerName: github
+  repo: app1-go
+  scheduler:
+    kind: ""
+    name: in-repo
+  url: https://github.com/ederqueirozdf/app1-go
