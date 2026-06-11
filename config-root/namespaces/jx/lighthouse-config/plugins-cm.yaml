@@ -5,6 +5,7 @@ data:
     - lgtm_acts_as_approve: true
       repos:
       - ederqueirozdf/jx-openshift
+      - ederqueirozdf/app2-cobaia
       require_self_approval: true
     cat: {}
     cherry_pick_unapproved: {}
@@ -16,6 +17,11 @@ data:
         env/prow/plugins.yaml:
           name: plugins
     external_plugins:
+      ederqueirozdf/app2-cobaia:
+      - endpoint: http://cd-indicators.jx.svc.cluster.local/lighthouse/events
+        name: cd-indicators
+      - endpoint: http://lighthouse-webui-plugin.jx.svc.cluster.local/lighthouse/events
+        name: lighthouse-webui-plugin
       ederqueirozdf/jx-openshift:
       - endpoint: http://cd-indicators.jx.svc.cluster.local/lighthouse/events
         name: cd-indicators
@@ -25,6 +31,20 @@ data:
       additional_labels: null
     owners: {}
     plugins:
+      ederqueirozdf/app2-cobaia:
+      - approve
+      - assign
+      - help
+      - hold
+      - lgtm
+      - lifecycle
+      - override
+      - size
+      - trigger
+      - wip
+      - cat
+      - dog
+      - pony
       ederqueirozdf/jx-openshift:
       - config-updater
       - approve
@@ -51,7 +71,10 @@ data:
     triggers:
     - repos:
       - ederqueirozdf/jx-openshift
+      - ederqueirozdf/app2-cobaia
       trusted_org: ederqueirozdf
+    welcome:
+    - message_template: Welcome
 kind: ConfigMap
 metadata:
   creationTimestamp: null

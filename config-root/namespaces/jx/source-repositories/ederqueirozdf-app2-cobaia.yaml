@@ -1,0 +1,22 @@
+apiVersion: jenkins.io/v1
+kind: SourceRepository
+metadata:
+  creationTimestamp: null
+  labels:
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+    owner: ederqueirozdf
+    provider: github
+    repository: app2-cobaia
+  name: ederqueirozdf-app2-cobaia
+  namespace: jx
+spec:
+  httpCloneURL: https://github.com/ederqueirozdf/app2-cobaia.git
+  org: ederqueirozdf
+  provider: https://github.com
+  providerKind: github
+  providerName: github
+  repo: app2-cobaia
+  scheduler:
+    kind: ""
+    name: in-repo
+  url: https://github.com/ederqueirozdf/app2-cobaia
