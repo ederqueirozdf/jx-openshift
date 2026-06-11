@@ -1,0 +1,24 @@
+# Source: jxboot-helmfile-resources/templates/repositories.yaml
+apiVersion: jenkins.io/v1
+kind: SourceRepository
+metadata:
+  name: "dev"
+  labels:
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+    jenkins.io/gitSync: "false"
+  annotations:
+    meta.helm.sh/release-name: 'jxboot-helmfile-resources'
+    meta.helm.sh/release-namespace: 'jx'
+  namespace: jx
+spec:
+  description: "the git repository for the Dev environment"
+  provider: "https://github.com"
+  providerKind: 'github'
+  providerName: 'github'
+  org: "ederqueirozdf"
+  repo: "jx-openshift"
+  httpCloneURL: "https://github.com/ederqueirozdf/jx-openshift.git"
+  url: "https://github.com/ederqueirozdf/jx-openshift.git"
+  scheduler:
+    kind: Scheduler
+    name: "in-repo"

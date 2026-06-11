@@ -1,0 +1,12 @@
+# Source: jx-preview/templates/gc-jobs-sa.yaml
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: jx-preview-gc-jobs
+  labels:
+    app: jenkins-x-lighthouse-gcjobs
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+  annotations:
+    meta.helm.sh/release-name: 'jx-preview'
+    meta.helm.sh/release-namespace: 'jx'
+  namespace: jx

@@ -30,16 +30,20 @@ jxRequirements:
     registry: ghcr.io
   environments:
   - key: dev
+    owner: ederqueirozdf
+    repository: jx-openshift
   - key: staging
   - key: production
   ingress:
-    domain: change.me
+    domain: equeiroz.rhbr-lab.com.br
     kind: ingress
     namespaceSubDomain: -jx.
     tls:
       email: ""
       enabled: false
       production: false
+  pipelineUser:
+    username: ederqueirozdf
   repository: bucketrepo
   secretStorage: local
   vault: {}
