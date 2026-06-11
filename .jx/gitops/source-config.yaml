@@ -10,6 +10,7 @@ spec:
     repositories:
     - name: app1-go
     - name: app2-cobaia
+    - name: go2
     scheduler: in-repo
   slack:
     channel: '#jenkins-x-pipelines'
