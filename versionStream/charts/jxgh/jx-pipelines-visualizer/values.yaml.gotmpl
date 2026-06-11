@@ -38,6 +38,11 @@ pod:
 {{- end }}
 {{- end }}
 
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+pod:
+  securityContext: null
+{{- end }}
+
 serviceAccount:
   annotations:
 {{- if eq .Values.jxRequirements.cluster.provider "gke" }}

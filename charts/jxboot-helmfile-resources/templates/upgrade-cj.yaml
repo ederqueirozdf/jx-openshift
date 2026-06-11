@@ -1,0 +1,83 @@
+{{- if eq .Values.jxRequirements.autoUpdate.enabled true }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jx-boot-upgrade
+  labels:
+    app: jenkins-x-updatebot
+    release: jx
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: jenkins-x-updatebot
+          annotations:
+{{- if .Values.istio.enabled }}
+            sidecar.istio.io/inject: "false"
+{{- end }}
+        spec:
+          initContainers:
+            - command:
+              - jx
+              - secret
+              - copy
+              - --name
+              - jx-boot-job-env-vars
+              - --ns
+              - jx-git-operator
+              - --to
+              - jx
+              name: copy-secret
+              image: "{{ .Values.jxBoot.image.repository }}:{{ .Values.versions.jx }}"
+              imagePullPolicy: Always
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          containers:
+          - args:
+            - env
+            - --git-setup
+{{- if .Values.jxRequirements.autoUpdate.autoMerge }}
+            - --auto-merge
+{{- end }}
+{{- if .Values.jxRequirements.autoUpdate.reusePullRequest }}
+            - --reuse-pull-request
+{{- end }}
+            command:
+            - jx-updatebot
+            env:
+            - name: GIT_SECRET_MOUNT_PATH
+              value: /secrets/git
+            envFrom:
+            - secretRef:
+                name: jx-boot-job-env-vars
+                optional: true
+            image: "{{ .Values.updatebot.image.repository }}:{{ .Values.versions.updatebot }}"
+            imagePullPolicy: Always
+            name: updatebot
+            resources: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            volumeMounts:
+            - mountPath: /secrets/git
+              name: secrets-git
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          serviceAccountName: tekton-bot
+          volumes:
+          - name: secrets-git
+            secret:
+              defaultMode: 420
+              secretName: tekton-git
+  successfulJobsHistoryLimit: 3
+  schedule: {{ .Values.jxRequirements.autoUpdate.schedule | default "0 0 * * *" | quote }}
+  suspend: false
+{{- end }}

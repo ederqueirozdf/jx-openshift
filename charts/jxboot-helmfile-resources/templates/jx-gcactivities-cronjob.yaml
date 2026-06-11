@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jx-gcactivities
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  schedule: {{ .Values.gc.activities.schedule | quote }}
+  startingDeadlineSeconds: 4000
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: gcactivities
+            release: jxboot-helmfile-resources
+          annotations:
+{{- if .Values.istio.enabled }}
+            sidecar.istio.io/inject: "false"
+{{- end }}
+{{- if .Values.gc.activities.annotations }}
+{{ toYaml .Values.gc.activities.annotations | indent 12 }}
+{{- end }}
+        spec:
+          restartPolicy: Never
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+          volumes:
+            - name: jx-home
+              emptyDir: {}
+{{- end }}
+          serviceAccountName: jx-gcactivities
+          containers:
+            - name: gcactivities
+              command: [jx]
+              args:
+                - gitops
+                - gc
+                - activities
+            {{- if .Values.gc.activities.extraArgs }}
+              {{- range .Values.gc.activities.extraArgs }}
+                - {{ . | quote }}
+              {{- end }}
+            {{- end}}
+              imagePullPolicy: IfNotPresent
+              image: "{{ .Values.jxBoot.image.repository }}:{{ .Values.versions.jx }}"
+              env:
+                - name: JX_LOG_FORMAT
+                  value: json
+                - name: JX_LOG_LEVEL
+                  value: info
+                - name: PIPELINE_KIND
+                  value: dummy
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+                - name: HOME
+                  value: /tmp/jx-home
+                - name: XDG_CONFIG_HOME
+                  value: /tmp/jx-home/.config
+                - name: XDG_CACHE_HOME
+                  value: /tmp/jx-home/.cache
+                - name: XDG_DATA_HOME
+                  value: /tmp/jx-home/.local/share
+{{- end }}
+              resources: {}
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+              volumeMounts:
+                - name: jx-home
+                  mountPath: /tmp/jx-home
+{{- end }}

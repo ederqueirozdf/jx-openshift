@@ -28,6 +28,21 @@ env:
     {{- end }}
   {{- end }}
 {{- end }}
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+  HOME: /tmp/git-home
+  XDG_CACHE_HOME: /tmp/git-home/.cache
+  XDG_DATA_HOME: /tmp/git-home/.local/share
+{{- end }}
   GIT_SECRET_SERVER: {{ .Values.jxRequirements.cluster.gitServer }}
   TRACES_EXPORTER_TYPE: "jaeger:http:thrift"
   TRACES_EXPORTER_ENDPOINT: "tempo.jx-observability:14268"
+
+{{- if eq .Values.jxRequirements.cluster.provider "openshift" }}
+extraVolumes:
+- name: git-home
+  emptyDir: {}
+
+extraVolumeMounts:
+- name: git-home
+  mountPath: /tmp/git-home
+{{- end }}

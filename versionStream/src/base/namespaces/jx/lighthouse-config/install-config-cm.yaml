@@ -6,4 +6,4 @@ metadata: # kpt-merge: jx/jx-install-config
   annotations:
     internal.kpt.dev/upstream-identifier: '|ConfigMap|jx|jx-install-config'
 data:
-  kubeProvider: gke
+  kubeProvider: openshift
