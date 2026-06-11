@@ -8,6 +8,7 @@ spec:
     provider: https://github.com
     providerKind: github
     repositories:
+    - name: app1-go
     - name: app2-cobaia
     scheduler: in-repo
   slack:
